@@ -6,6 +6,15 @@ Demonstration calendar project for a backend/frontend stacked by Django + Cassan
 	<img src="screenshot.png" alt="plannr"/>
 </p>
 
+# Deploy
+You are going to need `Docker` and `docker-compose` installed.
+```bash
+docker-compose build
+docker-compose up
+```
+now the Vue panel start at http://0.0.0.0:9092
+
+
 # License
 The MIT License (MIT)
 
