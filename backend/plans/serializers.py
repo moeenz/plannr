@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated
 
-from events.models import Plan
+from plans.models import Plan
 from utils.request import get_request_user
 
 
