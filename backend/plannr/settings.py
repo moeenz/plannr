@@ -95,6 +95,8 @@ DATABASES = {
     }
 }
 
+DATABASE_ROUTERS = ('plannr.db_router.DBRouter',)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
