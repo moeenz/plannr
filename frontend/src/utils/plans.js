@@ -13,7 +13,7 @@ import randomColor from 'randomcolor'
  */
 function partitionPlans (plans, midday) {
   if (plans === undefined || plans.length === 0) {
-    return {}
+    return []
   }
   // Sort plans based on their start point.
   plans = plans.map((p) => ({
@@ -23,8 +23,7 @@ function partitionPlans (plans, midday) {
     desc: p.desc
   })).sort((p1, p2) => p1.start > p2.start)
 
-  // const partitions = new Set()
-  let colorings = {}
+  let coloredPlans = []
 
   const itree = new IntervalTree(midday)
 
@@ -62,14 +61,19 @@ function partitionPlans (plans, midday) {
     const newEnd = cols.sort((x, y) => y.end > x.end)[0].end
     if (newEnd === interval.end) {
       // Put same color for colliding plans.
-      const groupedColor = randomColor()
-      set.forEach((el) => { colorings[el] = groupedColor })
+      const groupedColor = randomColor({luminosity: 'dark'})
+      set.forEach(function (el) {
+        coloredPlans.push({
+          ...plans.find((p) => p.id === el),
+          color: groupedColor
+        })
+      })
 
       const nxtIv = nextInterval(plans, newEnd)
       if (nxtIv) {
         return maximizeCollisions(nxtIv, undefined)
       } else {
-        return colorings
+        return coloredPlans
       }
     } else {
       return maximizeCollisions({start: interval.start, end: newEnd})
