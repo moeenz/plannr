@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       // Proxy all requests starting with /api to our Django backend.
       '/api': {
-        target: 'http://0.0.0.0:9091/api',
+        target: 'http://django:9091/api',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
