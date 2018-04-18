@@ -65,6 +65,7 @@ export default {
       date: new Date(thisYear, thisMonth, 1),
       today: undefined,
       plans: [],
+      selectedDate: undefined,
       dayPlans: undefined,
       monthPlans: undefined,
       partitionedPlans: undefined,
@@ -124,12 +125,28 @@ export default {
               end: new Date(addedPlan.end),
               desc: addedPlan.desc
             })
-            console.log(this.plans)
+
+            this.dayPlans.push({
+              id: addedPlan.id,
+              date: new Date(addedPlan.start),
+              start: new Date(addedPlan.start),
+              end: new Date(addedPlan.end),
+              desc: addedPlan.desc
+            })
+
+            this.partitionedPlans = partitionPlans(this.dayPlans, this.getSelectDayMidday())
           }
         })
     },
+    getSelectDayMidday () {
+      const todayDate = this.selectedDate
+      const midday = (new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 0, 0, 0).getTime() +
+        new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 23, 59, 59).getTime()) / 2
+      return midday
+    },
     dayTrigger: function (evt) {
       const todayDate = evt
+      this.selectedDate = evt
       this.newPlanStart = this.newPlanEnd = todayDate
 
       this.dayPlans = this.plans.filter((plan) => {
@@ -137,10 +154,7 @@ export default {
               todayDate.getMonth() === plan.start.getMonth() &&
               todayDate.getDate() === plan.start.getDate()
       })
-
-      const midday = (new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 0, 0, 0).getTime() +
-        new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 23, 59, 59).getTime()) / 2
-      this.partitionedPlans = partitionPlans(this.dayPlans, midday)
+      this.partitionedPlans = partitionPlans(this.dayPlans, this.getSelectDayMidday())
     },
     planClicked: function (evt) {
 
