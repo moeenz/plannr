@@ -11,6 +11,9 @@
         <b-field>
           <button class="button is-danger" v-on:click="doAuth">Login</button>
         </b-field>
+        <b-field>
+          <button class="button is-warning" v-on:click="routeToRegister">or Register</button>
+        </b-field>
       </section>
     </section>
   </section>
@@ -40,6 +43,9 @@ export default {
             this.$router.push({name: 'plans'})
           }
         })
+    },
+    routeToRegister: function () {
+      this.$router.push({name: 'user-register'})
     }
   }
 }

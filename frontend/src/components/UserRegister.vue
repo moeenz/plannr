@@ -11,6 +11,9 @@
         <b-field>
           <button class="button is-success" v-on:click="doRegister">Register</button>
         </b-field>
+        <b-field>
+          <button class="button is-warning" v-on:click="routeToLogin">Got Credentials?</button>
+        </b-field>
       </section>
     </section>
   </section>
@@ -39,6 +42,9 @@ export default {
             this.$router.push({name: 'user-in'})
           }
         })
+    },
+    routeToLogin: function () {
+      this.$router.push({name: 'user-in'})
     }
   }
 }
