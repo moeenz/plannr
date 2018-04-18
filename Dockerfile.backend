@@ -1,0 +1,19 @@
+FROM python:3.6
+
+LABEL maintainer="Moeen Zamani <moeenzdev@gmail.com>"
+
+WORKDIR /srv
+
+ADD backend/requirements.txt /srv/backend/requirements.txt
+
+RUN pip install -r /srv/backend/requirements.txt
+
+COPY ./backend/ /srv/backend/
+
+COPY wait-for-it.sh /srv/wait-for-it.sh
+COPY backend-entrypoint.sh /srv/backend-entrypoint.sh
+
+RUN chmod +x /srv/wait-for-it.sh
+RUN chmod +x /srv/backend-entrypoint.sh
+
+WORKDIR /srv
