@@ -11,13 +11,10 @@ class PlanSerializer(serializers.Serializer):
     a bare serializer is need.`
     """
 
-    id = serializers.UUIDField()
+    id = serializers.UUIDField(read_only=True)
     start = serializers.DateTimeField(required=True)
     end = serializers.DateTimeField(required=True)
     desc = serializers.CharField(required=True)
-
-    class Meta:
-        read_only_fields = ('id',)
 
     def create(self, validated_data):
         request_user = get_request_user(self.context.get('request'))
