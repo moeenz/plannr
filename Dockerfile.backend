@@ -15,5 +15,3 @@ COPY backend-entrypoint.sh /srv/backend-entrypoint.sh
 
 RUN chmod +x /srv/wait-for-it.sh
 RUN chmod +x /srv/backend-entrypoint.sh
-
-WORKDIR /srv
