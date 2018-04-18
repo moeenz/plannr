@@ -2,7 +2,8 @@ DEFAULT_DB_APPS = (
     'auth',
     'admin',
     'contenttypes',
-    'sessions'
+    'sessions',
+    'users'
 )
 
 class DBRouter:
