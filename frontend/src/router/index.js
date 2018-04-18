@@ -53,7 +53,7 @@ export default new Router({
       }
     },
     {
-      path: '/plans',
+      path: '/',
       name: 'plans',
       component: Plans,
       beforeEnter: function (to, from, next) {
