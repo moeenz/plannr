@@ -38,6 +38,7 @@ VENDOR_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_cassandra_engine',
+    'rest_framework',
 ]
 
 PROJECT_APPS = [
@@ -104,7 +105,26 @@ DATABASES = {
 
 DATABASE_ROUTERS = ('plannr.db_router.DBRouter',)
 
+# Setting default auth User model.
 AUTH_USER_MODEL = 'users.User'
+
+REST_AUTH_JWT_BASED = 'rest_framework_jwt.authentication.JSONWebTokenAuthentication'
+
+# List of all accepted auth classes.
+REST_AUTH_CLASSES = (REST_AUTH_JWT_BASED,)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': REST_AUTH_CLASSES,
+    'PAGE_SIZE': 10
+}
+
+# REST-JWT-Authentication settings.
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=3),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer'
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
