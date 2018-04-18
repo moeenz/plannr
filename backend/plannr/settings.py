@@ -125,6 +125,7 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer'
 }
 
+CASSANDRA_FALLBACK_ORDER_BY_PYTHON = True
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
