@@ -11,25 +11,32 @@
           v-on:input="dayTrigger">
         </b-datepicker>
       </div>
-      <div class="column">
+      <div class="column" v-if="selectedDate">
+        <h1 class="title">{{ selectedDate.toLocaleDateString(locale, localeOptions) }}</h1>
         <div class="level">
-          <div class="level-left">
-            <h1 class="title">{{ today }}</h1>
+          <div class="level-item">
+            <b-field>
+              <b-timepicker placeholder="Start time" v-model="newPlanStart"></b-timepicker>
+            </b-field>
           </div>
-          <div class="level-right">
-            <b-field label="Start">
-              <b-timepicker size="is-small" v-model="newPlanStart"></b-timepicker>
+          <div class="level-item">
+            <b-field>
+              <b-timepicker placeholder="End time" v-model="newPlanEnd"></b-timepicker>
             </b-field>
-            <b-field label="End">
-              <b-timepicker size="is-small" v-model="newPlanEnd"></b-timepicker>
+          </div>
+          <div class="level-item">
+            <b-field>
+              <b-input placeholder="Description" v-model="newPlanDesc"></b-input>
             </b-field>
-            <b-field label="Description">
-              <b-input v-model="newPlanDesc"></b-input>
+          </div>
+          <div class="level-item">
+            <b-field>
+              <button class="button is-link is-success" v-on:click="createPlan">+ Plan</button>
             </b-field>
-            <button class="button is-link is-rounded is-success" v-on:click="createPlan">+ Plan</button>
           </div>
         </div>
-        <table class="table">
+        <!-- The reason b-table is not used is because of it's limitations for row coloring !-->
+        <table class="table" v-show="dayPlans.length > 0">
           <thead>
             <tr>
               <th>Start</th>
@@ -38,9 +45,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-bind:key="plan.id" v-bind:style="{ color: '#fff', background: partitionedPlans[plan.id]}" v-for="plan in dayPlans" v-on:click="planClicked(plan.id)">
-              <td>{{ plan.start }}</td>
-              <td>{{ plan.end }}</td>
+            <tr
+              v-bind:key="plan.id"
+              v-bind:style="{ color: '#fff', background: plan.color}"
+              v-for="plan in dayPlans"
+              v-on:click="planClicked(plan.id)">
+              <td>{{ new Date(plan.start).getHours() }} : {{ new Date(plan.start).getMinutes() }}</td>
+              <td>{{ new Date(plan.end).getHours() }} : {{ new Date(plan.end).getMinutes() }}</td>
               <td>{{ plan.desc }}</td>
             </tr>
           </tbody>
@@ -62,16 +73,27 @@ export default {
   name: 'Plans',
   data () {
     return {
+      locale: 'en-US',
+      localeOptions: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
       date: new Date(thisYear, thisMonth, 1),
-      today: undefined,
       plans: [],
+      dayPlans: [],
       selectedDate: undefined,
-      dayPlans: undefined,
-      monthPlans: undefined,
-      partitionedPlans: undefined,
       newPlanStart: undefined,
       newPlanEnd: undefined,
       newPlanDesc: undefined
+    }
+  },
+  watch: {
+    selectedDate: function (val) {
+      this.newPlanStart = this.newPlanEnd = val
+      this.dayPlans = partitionPlans(
+        this.plans.filter((plan) => {
+          return val.getFullYear() === plan.start.getFullYear() &&
+            val.getMonth() === plan.start.getMonth() &&
+            val.getDate() === plan.start.getDate()
+        }), this.getSelectDayMidday()
+      ).sort((p1, p2) => p1.start > p2.start)
     }
   },
   mounted () {
@@ -126,39 +148,24 @@ export default {
               desc: addedPlan.desc
             })
 
-            this.dayPlans.push({
-              id: addedPlan.id,
-              date: new Date(addedPlan.start),
-              start: new Date(addedPlan.start),
-              end: new Date(addedPlan.end),
-              desc: addedPlan.desc
-            })
-
-            this.partitionedPlans = partitionPlans(this.dayPlans, this.getSelectDayMidday())
+            // Trigger new `dayPlan` attribute computation.
+            this.selectedDate = new Date(this.newPlanStart)
           }
         })
     },
     getSelectDayMidday () {
+      /**
+       * This will be used for interval tree center point.
+       */
       const todayDate = this.selectedDate
       const midday = (new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 0, 0, 0).getTime() +
         new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 23, 59, 59).getTime()) / 2
       return midday
     },
     dayTrigger: function (evt) {
-      const todayDate = evt
       this.selectedDate = evt
-      this.newPlanStart = this.newPlanEnd = todayDate
-
-      this.dayPlans = this.plans.filter((plan) => {
-        return todayDate.getFullYear() === plan.start.getFullYear() &&
-              todayDate.getMonth() === plan.start.getMonth() &&
-              todayDate.getDate() === plan.start.getDate()
-      })
-      this.partitionedPlans = partitionPlans(this.dayPlans, this.getSelectDayMidday())
     },
-    planClicked: function (evt) {
-
-    }
+    planClicked: function (evt) {}
   }
 }
 </script>
