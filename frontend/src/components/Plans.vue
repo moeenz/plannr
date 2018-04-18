@@ -7,7 +7,6 @@
           inline
           v-model="date"
           indicators="dots"
-          :events="plans"
           v-on:input="dayTrigger">
         </b-datepicker>
       </div>
@@ -66,8 +65,8 @@
 import Vue from 'vue'
 import partitionPlans from '../utils/plans'
 
-const thisMonth = new Date().getMonth()
-const thisYear = new Date().getFullYear()
+let thisMonth = new Date().getMonth()
+let thisYear = new Date().getFullYear()
 
 export default {
   name: 'Plans',
@@ -97,10 +96,10 @@ export default {
     }
   },
   mounted () {
-    this.fetchPlans(thisYear, thisMonth + 1)
+    this.fetchPlans(thisYear, thisMonth + 1, undefined)
   },
   methods: {
-    fetchPlans: function (year, month) {
+    fetchPlans: function (year, month, presetDate) {
       Vue.axios
         .get(`/api/plans/?year=${year}&month=${month}`, {
           headers: {
@@ -118,6 +117,11 @@ export default {
                 desc: plan.desc
               }
             })
+
+            // Due to API lack of b-datepicker explained in `dayTrigger` method.
+            if (presetDate !== undefined) {
+              this.selectedDate = presetDate
+            }
           }
         })
     },
@@ -163,7 +167,15 @@ export default {
       return midday
     },
     dayTrigger: function (evt) {
-      this.selectedDate = evt
+      // Unfortunately b-datepicker does not inform well when current view month changes.
+      //  So we have to a bit of hacking to update corresponding plans.
+      if (evt.getMonth() === thisMonth && evt.getFullYear() === thisYear) {
+        this.selectedDate = evt
+      } else {
+        thisMonth = evt.getMonth()
+        thisYear = evt.getFullYear()
+        this.fetchPlans(evt.getFullYear(), evt.getMonth() + 1, evt)
+      }
     },
     planClicked: function (evt) {}
   }
