@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "interval-tree2": "^1.1.0",
+    "randomcolor": "^0.5.3",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.1",
     "vue-localstorage": "^0.6.2",
