@@ -76,12 +76,22 @@ WSGI_APPLICATION = 'plannr.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'cassandra': {
         'ENGINE': 'django_cassandra_engine',
         'NAME': 'plannr_db',
         'TEST_NAME': 'plannr_db_test',
         'USER': 'cassandra',
         'PASSWORD': 'cassandra',
-        'HOST': '0.0.0.0'
+        'HOST': '0.0.0.0',
+        'OPTIONS': {
+            'replication': {
+                'strategy_class': 'SimpleStrategy',
+                'replication_factor': 1
+            }
+        }
     }
 }
 
