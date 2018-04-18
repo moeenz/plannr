@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cassandra_engine',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +76,12 @@ WSGI_APPLICATION = 'plannr.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django_cassandra_engine',
+        'NAME': 'plannr_db',
+        'TEST_NAME': 'plannr_db_test',
+        'USER': 'cassandra',
+        'PASSWORD': 'cassandra',
+        'HOST': '0.0.0.0'
     }
 }
 
