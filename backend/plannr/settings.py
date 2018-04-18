@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+VENDOR_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_cassandra_engine',
 ]
+
+PROJECT_APPS = [
+    'plans',
+    'users'
+]
+
+INSTALLED_APPS = VENDOR_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
