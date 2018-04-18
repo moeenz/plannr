@@ -27,7 +27,8 @@ SECRET_KEY = '6+5zvpq9x7=qa(y=)od_*g4sun@8o!lvq5@1iv(mq=@z##rtm_'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '0.0.0.0'
+    '0.0.0.0',
+    'localhost'
 ]
 
 
@@ -97,7 +98,7 @@ DATABASES = {
         'TEST_NAME': 'plannr_db_test',
         'USER': 'cassandra',
         'PASSWORD': 'cassandra',
-        'HOST': '0.0.0.0',
+        'HOST': 'cassandra',
         'OPTIONS': {
             'replication': {
                 'strategy_class': 'SimpleStrategy',
