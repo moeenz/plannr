@@ -6,27 +6,56 @@ import 'buefy/lib/buefy.css'
 
 import Plans from '@/components/Plans'
 import UserIn from '@/components/UserIn'
+import VueLocalStorage from 'vue-localstorage'
 import UserRegister from '@/components/UserRegister'
 
 Vue.use(Buefy)
 Vue.use(Router)
+Vue.use(VueLocalStorage)
+
+function redirectToAuth (next) {
+  const jwtToken = Vue.localStorage.get('jwt_token', undefined, String)
+  if (jwtToken) {
+    next()
+  } else {
+    next({ name: 'user-in' })
+  }
+}
+
+function redirectToPlans (next) {
+  const jwtToken = Vue.localStorage.get('jwt_token', undefined, String)
+  if (jwtToken) {
+    next({ name: 'plans' })
+  } else {
+    next()
+  }
+}
 
 export default new Router({
   routes: [
     {
       path: '/user/in/',
       name: 'user-in',
-      component: UserIn
+      component: UserIn,
+      beforeEnter: function (to, from, next) {
+        redirectToPlans(next)
+      }
     },
     {
       path: '/user/register/',
       name: 'user-register',
-      component: UserRegister
+      component: UserRegister,
+      beforeEnter: function (to, from, next) {
+        redirectToPlans(next)
+      }
     },
     {
       path: '/plans',
       name: 'plans',
-      component: Plans
+      component: Plans,
+      beforeEnter: function (to, from, next) {
+        redirectToAuth(to, from, next)
+      }
     }
   ]
 })
