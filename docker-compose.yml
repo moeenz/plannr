@@ -1,9 +1,18 @@
 version: '3.3'
 services:
-   cassandra:
+  cassandra:
     image: cassandra
     container_name: cassandra
     restart: always
     ports:
-     - 9042:9042
-     - 7199:7199
+      - 9042:9042
+      - 7199:7199
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    depends_on:
+      - cassandra
+    ports:
+      - 9091:9091
+    entrypoint: /srv/backend-entrypoint.sh
